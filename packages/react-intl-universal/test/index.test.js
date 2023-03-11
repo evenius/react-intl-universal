@@ -5,6 +5,8 @@ import zhCN from "./locales/zh-CN";
 import enUS from "./locales/en-US";
 import enUSMore from "./locales/en-US-more";
 import LocalStorageMock from "./util/LocalStorageMock";
+import {jest} from '@jest/globals'
+
 global.localStorage = new LocalStorageMock;
 
 const locales = {
@@ -161,7 +163,7 @@ test("Message with Time", () => {
     intl.get("COUPON", {
       expires: expires
     })
-  ).toBe("优惠卷将在17:08:33过期");
+  ).toBe("优惠卷将在下午5:08:33过期");
 });
 
 test("Message with Currency", () => {
@@ -297,10 +299,16 @@ test("Get locale from URL", () => {
   expect(intl.getLocaleFromURL({ urlLocaleKey: "lang" })).toBe(undefined);
 
   // change url in jsdom: https://github.com/facebook/jest/issues/890
-  Object.defineProperty(window.location, "search", {
-    writable: true,
-    value: "?lang=en-US"
+  Object.defineProperty(window, "location", {
+    value: new URL(window.location.href + "?lang=en-US"),
+    configurable: true,
   });
+
+  // dom.reconfigure({ windowTop: window, url: window.location.href + "?lang=en-US" });
+  // Object.defineProperty(window.location, "search", {
+  //   writable: true,
+  //   value: ""
+  // });
   expect(intl.getLocaleFromURL({ urlLocaleKey: "lang" })).toBe("en-US");
 });
 
@@ -358,7 +366,7 @@ test("Resolve directly if the environment is not browser", async () => {
     value: undefined,
   });
   jest.resetModules();
-  const { default: ReactIntlUniversal } = await require('../src/ReactIntlUniversal');
+  const { default: ReactIntlUniversal } = await import('../src/ReactIntlUniversal');
   const nextIntl = new ReactIntlUniversal();
   const result = await nextIntl.init({ locales, currentLocale: "zh-CN" });
   Object.defineProperty(window.document, 'createElement', {

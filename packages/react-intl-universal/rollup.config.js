@@ -1,6 +1,6 @@
 import * as p from 'path';
-import babel from 'rollup-plugin-babel';
-import 'babel-preset-es2015-rollup';
+import babel from '@rollup/plugin-babel';
+// import 'babel-preset-es2015-rollup';
 
 const copyright = (`/*
  * Copyright ${new Date().getFullYear()}, Alibaba Group.
@@ -10,18 +10,21 @@ const copyright = (`/*
 `);
 
 export default {
-    entry : p.resolve('src/index.js'),
-    targets : [
+    input : p.resolve('src/index.js'),
+    output : [
         {
-            dest: 'lib/index.js',
+            file: 'lib/index.js',
+            banner : copyright,
+            exports: 'named',
             format: 'cjs'
         },
         {
-            dest: 'es/index.js',
+            file: 'es/index.js',
+            banner : copyright,
+            exports: 'named',
             format: 'es'
         }
     ],
-    banner : copyright,
     external : [
         'invariant',
         'intl-messageformat',
@@ -31,7 +34,7 @@ export default {
         'querystring',
         'react',
         'console-polyfill',
-        'lodash.merge',
+        'plain-object-merge',
     ],
-    plugins : [babel({exclude: 'node_modules/**', presets: ['es2015-rollup']})]
+    plugins : [babel({exclude: 'node_modules/**', babelHelpers: 'inline'})]
 };

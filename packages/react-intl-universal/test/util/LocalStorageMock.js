@@ -1,4 +1,4 @@
-module.exports = class LocalStorageMock {
+export default class LocalStorageMock {
   constructor() {
     this.store = {};
   }

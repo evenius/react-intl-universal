@@ -1,4 +1,4 @@
-module.exports = ({
+export default ({
   "SIMPLE": "简单",
   "HELLO": "你好, {name}",
   "TIP": "这是<span>HTML</span>",

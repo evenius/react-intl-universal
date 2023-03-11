@@ -1,12 +1,11 @@
 import "intl";
 import React from "react";
-import IntlMessageFormat from "intl-messageformat";
+import { IntlMessageFormat } from "intl-messageformat";
 import escapeHtml from "escape-html";
 import cookie from "cookie";
-import queryParser from "querystring";
 import invariant from "invariant";
 import * as constants from "./constants";
-import merge from "lodash.merge";
+import merge from "plain-object-merge";
 
 String.prototype.defaultMessage = String.prototype.d = function (msg) {
   return this || msg || "";
@@ -82,7 +81,7 @@ class ReactIntlUniversal {
     }
 
     try {
-      const msgFormatter = new IntlMessageFormat(msg, currentLocale, formats);
+      const msgFormatter = new IntlMessageFormat(msg, currentLocale, formats, { ignoreTag: true });
       return msgFormatter.format(variables);
     } catch (err) {
       this.options.warningHandler(
@@ -204,7 +203,7 @@ class ReactIntlUniversal {
    * Load more locales after init
    */
   load(locales) {
-    merge(this.options.locales, locales);
+    this.options.locales = merge([this.options.locales, locales]);
   }
 
   getLocaleFromCookie(options) {
@@ -227,8 +226,9 @@ class ReactIntlUniversal {
     if (urlLocaleKey) {
       let query = location.search.split("?");
       if (query.length >= 2) {
-        let params = queryParser.parse(query[1]);
-        return params && params[urlLocaleKey];
+        let params = new URLSearchParams(query[1])
+        // let params = queryParser.parse(query[1]);
+        return params && params.get(urlLocaleKey);
       }
     }
   }

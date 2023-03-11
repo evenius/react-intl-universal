@@ -1,4 +1,4 @@
-module.exports = ({
+export default ({
   "SIMPLE": "Simple",
   "HELLO": "Hello, {name}",
   "TIP": "This is <span>HTML</span>",

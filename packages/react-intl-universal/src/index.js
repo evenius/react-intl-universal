@@ -33,5 +33,6 @@ export {
   getLocaleFromURL,
   getDescendantProp,
   getLocaleFromBrowser,
-  defaultInstance as default
 };
+
+export default defaultInstance;
